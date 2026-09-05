@@ -79,11 +79,18 @@ function downloadFile(url, dest) {
 
 async function resolveBinary() {
   const binName = getBinaryName();
+  const ext = os.platform() === 'win32' ? '.exe' : '';
 
-  // 1. Check if binary exists in local repo dist/ (development mode)
-  const localDistBin = path.join(__dirname, '..', 'dist', binName);
-  if (fs.existsSync(localDistBin)) {
-    return localDistBin;
+  // 1. Check if binary exists in local repo (development/CI mode)
+  const candidateLocalPaths = [
+    path.join(__dirname, '..', 'dist', binName),
+    path.join(__dirname, '..', binName),
+    path.join(__dirname, '..', `birdnet-mcp${ext}`),
+  ];
+  for (const candidate of candidateLocalPaths) {
+    if (fs.existsSync(candidate)) {
+      return candidate;
+    }
   }
 
   // 2. Check if cached binary exists
