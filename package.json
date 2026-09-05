@@ -1,0 +1,40 @@
+{
+  "name": "birdnet-go-mcp",
+  "version": "1.0.0",
+  "description": "Model Context Protocol (MCP) server & CLI for BirdNET-Go bioacoustic observatories",
+  "main": "bin/run.js",
+  "bin": {
+    "birdnet-go-mcp": "bin/run.js",
+    "birdnet-mcp": "bin/run.js"
+  },
+  "files": [
+    "bin/run.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node bin/run.js version"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zax0rz/birdnet-go-mcp.git"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "birdnet",
+    "birdnet-go",
+    "bioacoustics",
+    "ai",
+    "claude",
+    "claude-desktop",
+    "antigravity",
+    "openclaw"
+  ],
+  "author": "Zach",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zax0rz/birdnet-go-mcp/issues"
+  },
+  "homepage": "https://github.com/zax0rz/birdnet-go-mcp#readme"
+}

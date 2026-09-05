@@ -1,0 +1,22 @@
+# Binaries and build artifacts
+dist/
+/birdnet-mcp*
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Test artifacts
+*.test
+*.out
+
+# Node / NPM
+node_modules/
+npm-debug.log*
+
+# OS / Editor artifacts
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
