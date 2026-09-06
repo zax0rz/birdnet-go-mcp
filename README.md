@@ -42,7 +42,7 @@ No Go installation needed. Downloads the native binary for your platform automat
 npx -y birdnet-go-mcp status
 
 # Or set target host
-BIRDNET_BASE_URL="http://192.168.1.130:8080" npx -y birdnet-go-mcp recent
+BIRDNET_BASE_URL="http://192.0.2.10:8080" npx -y birdnet-go-mcp recent
 ```
 
 ### 2. Install via Go
@@ -77,8 +77,8 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS), 
       "command": "npx",
       "args": ["-y", "birdnet-go-mcp", "serve"],
       "env": {
-        "BIRDNET_BASE_URL": "http://192.168.1.130:8080",
-        "CLIPS_BASE_URL": "http://192.168.1.130:8091"
+        "BIRDNET_BASE_URL": "http://192.0.2.10:8080",
+        "CLIPS_BASE_URL": "http://192.0.2.10:8091"
       }
     }
   }
@@ -93,8 +93,8 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS), 
       "command": "/usr/local/bin/birdnet-mcp",
       "args": ["serve"],
       "env": {
-        "BIRDNET_BASE_URL": "http://192.168.1.130:8080",
-        "CLIPS_BASE_URL": "http://192.168.1.130:8091"
+        "BIRDNET_BASE_URL": "http://192.0.2.10:8080",
+        "CLIPS_BASE_URL": "http://192.0.2.10:8091"
       }
     }
   }
@@ -123,8 +123,8 @@ In your Antigravity MCP configuration (`~/.gemini/antigravity/mcp/` or project s
       "command": "birdnet-mcp",
       "args": ["serve"],
       "env": {
-        "BIRDNET_BASE_URL": "http://192.168.1.130:8080",
-        "CLIPS_BASE_URL": "http://192.168.1.130:8091"
+        "BIRDNET_BASE_URL": "http://192.0.2.10:8080",
+        "CLIPS_BASE_URL": "http://192.0.2.10:8091"
       }
     }
   }
@@ -145,8 +145,8 @@ In `~/.openclaw/openclaw.json`:
         "command": "/Users/zach/.openclaw/mcp-servers/birdnet-go-mcp/bin/birdnet-mcp",
         "args": [],
         "env": {
-          "BIRDNET_BASE_URL": "http://192.168.1.130:8080",
-          "CLIPS_BASE_URL": "http://192.168.1.130:8091"
+          "BIRDNET_BASE_URL": "http://192.0.2.10:8080",
+          "CLIPS_BASE_URL": "http://192.0.2.10:8091"
         },
         "toolFilter": {
           "include": ["*"]
@@ -197,7 +197,7 @@ Point your agent to:
 ```bash
 $ birdnet-mcp status
 
-🔍 Connecting to BirdNET-Go at http://192.168.1.130:8080...
+🔍 Connecting to BirdNET-Go at http://192.0.2.10:8080...
 
 === AUDIO STREAMS ===
 NAME          TYPE   HEALTH      STATE     THROUGHPUT   LAST RECEIVED
@@ -216,11 +216,11 @@ Environment:  LXC
 $ birdnet-mcp recent --limit 5 --min-conf 0.80
 
 ID     TIME                  SPECIES   COMMON NAME        CONF   NEW?   CLIP URL
-#129   2026-09-04 19:59:35   easblu    Eastern Bluebird   84%    -      http://192.168.1.130:8091/2026/09/sialia_sialis_84p_20260904T195937Z.wav
-#128   2026-09-04 19:58:17   easblu    Eastern Bluebird   95%    -      http://192.168.1.130:8091/2026/09/sialia_sialis_95p_20260904T195819Z.wav
-#127   2026-09-04 19:05:23   blujay    Blue Jay           84%    -      http://192.168.1.130:8091/2026/09/cyanocitta_cristata_84p_20260904T190525Z.wav
-#126   2026-09-04 18:46:16   carwre    Carolina Wren      96%    -      http://192.168.1.130:8091/2026/09/thryothorus_ludovicianus_96p_20260904T184618Z.wav
-#124   2026-09-04 18:35:34   houfin    House Finch        90%    -      http://192.168.1.130:8091/2026/09/haemorhous_mexicanus_90p_20260904T183536Z.wav
+#129   2026-09-04 19:59:35   easblu    Eastern Bluebird   84%    -      http://192.0.2.10:8091/2026/09/sialia_sialis_84p_20260904T195937Z.wav
+#128   2026-09-04 19:58:17   easblu    Eastern Bluebird   95%    -      http://192.0.2.10:8091/2026/09/sialia_sialis_95p_20260904T195819Z.wav
+#127   2026-09-04 19:05:23   blujay    Blue Jay           84%    -      http://192.0.2.10:8091/2026/09/cyanocitta_cristata_84p_20260904T190525Z.wav
+#126   2026-09-04 18:46:16   carwre    Carolina Wren      96%    -      http://192.0.2.10:8091/2026/09/thryothorus_ludovicianus_96p_20260904T184618Z.wav
+#124   2026-09-04 18:35:34   houfin    House Finch        90%    -      http://192.0.2.10:8091/2026/09/haemorhous_mexicanus_90p_20260904T183536Z.wav
 ```
 
 ### Download Audio Recording

@@ -15,7 +15,7 @@ var (
 
 // ResolveClipURL builds the accessible LAN URL for a clip.
 // Clips are served on Caddy (:8091) organized by year and month:
-// http://192.168.1.130:8091/{year}/{month}/{clipName}
+// http://192.0.2.10:8091/{year}/{month}/{clipName}
 func ResolveClipURL(baseURL, clipName, detectionDate string) string {
 	if clipName == "" {
 		return ""
