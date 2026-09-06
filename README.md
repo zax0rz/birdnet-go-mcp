@@ -65,9 +65,9 @@ Download the latest static binary for your architecture from [GitHub Releases](h
 
 ## Client & Harness Setup
 
-### Claude Desktop
+### Claude Desktop & Cursor
 
-Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
+Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS), `%APPDATA%\Claude\claude_desktop_config.json` (Windows), or add under Cursor Settings ➔ Features ➔ MCP:
 
 #### Option A: Using `npx` (Easiest)
 ```json
