@@ -10,6 +10,7 @@
 <p align="center">
   <a href="https://github.com/zax0rz/birdnet-go-mcp/releases"><img src="https://img.shields.io/github/v/release/zax0rz/birdnet-go-mcp?style=flat-square&color=3b82f6" alt="Latest Release"></a>
   <a href="https://www.npmjs.com/package/birdnet-go-mcp"><img src="https://img.shields.io/npm/v/birdnet-go-mcp?style=flat-square&color=cb3837&logo=npm" alt="npm package"></a>
+  <a href="https://glama.ai/mcp/servers/zax0rz/birdnet-go-mcp"><img src="https://glama.ai/mcp/servers/zax0rz/birdnet-go-mcp/badges/score.svg" alt="Glama MCP Server"></a>
   <a href="https://github.com/zax0rz/birdnet-go-mcp/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-emerald?style=flat-square" alt="MIT License"></a>
   <a href="https://golang.org"><img src="https://img.shields.io/badge/Go-1.24+-00ADD8?style=flat-square&logo=go" alt="Go Version"></a>
   <a href="https://modelcontextprotocol.io"><img src="https://img.shields.io/badge/MCP-Standard-purple?style=flat-square" alt="Model Context Protocol"></a>
