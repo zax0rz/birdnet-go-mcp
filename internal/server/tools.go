@@ -38,11 +38,11 @@ func formatEnvelope(v any) string {
 	return string(data)
 }
 
-// RegisterTools registers all 7 read-only, parallel-safe tools on the MCP server
+// RegisterTools registers all 8 read-only, parallel-safe tools on the MCP server
 func RegisterTools(s *server.MCPServer, api *client.BirdNETClient) {
 	// 1. get_recent_detections
 	recentTool := mcp.NewTool("get_recent_detections",
-		mcp.WithDescription("Get recent bird detections from the backyard observatory. Returns species names, confidence scores, timestamps, and audio clip URLs."),
+		mcp.WithDescription("Retrieve the most recent bird acoustic detections from the BirdNET-Go observatory. Returns species names, confidence scores, timestamps, and audio clip URLs. Use this as the primary tool for 'what birds were heard recently?' questions; use search_detections for historical lookups or get_today_summary for aggregates. All output is capped at 8KB to protect the agent context window."),
 		mcp.WithReadOnlyHintAnnotation(true),
 		mcp.WithDestructiveHintAnnotation(false),
 		mcp.WithIdempotentHintAnnotation(true),
@@ -81,7 +81,7 @@ func RegisterTools(s *server.MCPServer, api *client.BirdNETClient) {
 
 	// 2. search_detections
 	searchTool := mcp.NewTool("search_detections",
-		mcp.WithDescription("Search historical detections in SQLite by date (YYYY-MM-DD), species name/code, and minimum confidence."),
+		mcp.WithDescription("Search historical detection records by date, species name/code, and minimum confidence. Use this to answer questions about a specific day, date range, or species across history. For the latest activity use get_recent_detections instead. Dates must be YYYY-MM-DD."),
 		mcp.WithReadOnlyHintAnnotation(true),
 		mcp.WithDestructiveHintAnnotation(false),
 		mcp.WithIdempotentHintAnnotation(true),
@@ -124,13 +124,13 @@ func RegisterTools(s *server.MCPServer, api *client.BirdNETClient) {
 
 	// 3. get_detection_detail
 	detailTool := mcp.NewTool("get_detection_detail",
-		mcp.WithDescription("Get comprehensive details for a specific detection ID, including weather at detection time, confidence, and audio clip URL."),
+		mcp.WithDescription("Get comprehensive details for a single detection by its numeric ID (obtained from get_recent_detections or search_detections): weather conditions at detection time, confidence score, and audio clip URL. Use after an interesting detection ID has been identified."),
 		mcp.WithReadOnlyHintAnnotation(true),
 		mcp.WithDestructiveHintAnnotation(false),
 		mcp.WithIdempotentHintAnnotation(true),
 		mcp.WithInteger("id",
 			mcp.Required(),
-			mcp.Description("Detection ID number"),
+			mcp.Description("Numeric detection ID, as returned by get_recent_detections or search_detections"),
 		),
 	)
 
@@ -150,7 +150,7 @@ func RegisterTools(s *server.MCPServer, api *client.BirdNETClient) {
 
 	// 4. get_today_summary
 	summaryTool := mcp.NewTool("get_today_summary",
-		mcp.WithDescription("Get an aggregate summary of species activity recorded by the observatory (species count, total calls, first and last heard times)."),
+		mcp.WithDescription("Get an aggregate summary of today's observatory activity: per-species detection counts plus first and last heard times. Use for daily briefings or 'what happened today' questions."),
 		mcp.WithReadOnlyHintAnnotation(true),
 		mcp.WithDestructiveHintAnnotation(false),
 		mcp.WithIdempotentHintAnnotation(true),
@@ -172,7 +172,7 @@ func RegisterTools(s *server.MCPServer, api *client.BirdNETClient) {
 
 	// 5. get_new_arrivals
 	arrivalsTool := mcp.NewTool("get_new_arrivals",
-		mcp.WithDescription("Get species newly detected by the station (first time ever or new this season/year). Useful for monitoring migration."),
+		mcp.WithDescription("List species detected for the first time ever, or newly arrived this season/year. Use this to spot migration events, rare visitors, or new residents."),
 		mcp.WithReadOnlyHintAnnotation(true),
 		mcp.WithDestructiveHintAnnotation(false),
 		mcp.WithIdempotentHintAnnotation(true),
@@ -193,7 +193,7 @@ func RegisterTools(s *server.MCPServer, api *client.BirdNETClient) {
 
 	// 6. get_station_health
 	healthTool := mcp.NewTool("get_station_health",
-		mcp.WithDescription("Check real-time health of the outdoor station (Pi Zero 2 W mic RTSP stream, ffmpeg ingest, bytes/second, and CT 122 host uptime)."),
+		mcp.WithDescription("Get real-time health telemetry for the monitoring station: audio stream state and ingest throughput, packet loss, and host uptime/CPU. Use this to diagnose a silent station or missing detections before other tools."),
 		mcp.WithReadOnlyHintAnnotation(true),
 		mcp.WithDestructiveHintAnnotation(false),
 		mcp.WithIdempotentHintAnnotation(true),
@@ -217,16 +217,16 @@ func RegisterTools(s *server.MCPServer, api *client.BirdNETClient) {
 
 	// 7. get_audio_clip
 	clipTool := mcp.NewTool("get_audio_clip",
-		mcp.WithDescription("Resolve the full LAN URL for an audio clip on Caddy (:8091) so Leopold can attach it to Discord #birdz0rz messages."),
+		mcp.WithDescription("Resolve a detection's audio clip (.wav) into a full HTTP URL on the clips file server, for sharing or embedding in messages and web pages. The URL is only reachable from the same network as the clips server. Use get_audio_clip_base64 instead when the audio data must be returned inline to the model."),
 		mcp.WithReadOnlyHintAnnotation(true),
 		mcp.WithDestructiveHintAnnotation(false),
 		mcp.WithIdempotentHintAnnotation(true),
 		mcp.WithString("clip_name",
 			mcp.Required(),
-			mcp.Description("Clip file name from detection record (e.g. 'sialia_sialis_96p_20260829T192351Z.wav')"),
+			mcp.Description("Clip file name exactly as returned in a detection record, e.g. 'sialia_sialis_96p_20260829T192351Z.wav'"),
 		),
 		mcp.WithString("detection_date",
-			mcp.Description("Optional detection date in YYYY-MM-DD format as fallback for folder path"),
+			mcp.Description("Detection date in YYYY-MM-DD format; used as a fallback to locate the clip's folder when the filename embeds no parseable date"),
 		),
 	)
 
@@ -254,16 +254,16 @@ func RegisterTools(s *server.MCPServer, api *client.BirdNETClient) {
 
 	// 8. get_audio_clip_base64
 	clipDataTool := mcp.NewTool("get_audio_clip_base64",
-		mcp.WithDescription("Download and return base64-encoded audio (WAV) for a detection clip. Useful for multimodal models with audio input capabilities or off-LAN agents."),
+		mcp.WithDescription("Download a detection's audio clip (.wav) and return it base64-encoded, for multimodal models that accept audio input directly. WARNING: a 15-second clip is roughly 350,000-500,000 tokens. Call sparingly for single-clip verification only — never inside high-frequency or scheduled workflows. Use get_audio_clip for a lightweight shareable URL instead."),
 		mcp.WithReadOnlyHintAnnotation(true),
 		mcp.WithDestructiveHintAnnotation(false),
 		mcp.WithIdempotentHintAnnotation(true),
 		mcp.WithString("clip_name",
 			mcp.Required(),
-			mcp.Description("Clip file name from detection record (e.g. 'sialia_sialis_96p_20260829T192351Z.wav')"),
+			mcp.Description("Clip file name exactly as returned in a detection record, e.g. 'sialia_sialis_96p_20260829T192351Z.wav'"),
 		),
 		mcp.WithString("detection_date",
-			mcp.Description("Optional detection date in YYYY-MM-DD format as fallback for folder path"),
+			mcp.Description("Detection date in YYYY-MM-DD format; used as a fallback to locate the clip's folder when the filename embeds no parseable date"),
 		),
 	)
 
